@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-    const user_has_meeting = sequelize.define('user_has_meeting', {
+    return sequelize.define('user_has_meeting', {
         id: {
             autoIncrement: true,
             type: DataTypes.INTEGER,
@@ -53,5 +53,4 @@ module.exports = function(sequelize, DataTypes) {
             },
         ]
     });
-    return user_has_meeting;
 };

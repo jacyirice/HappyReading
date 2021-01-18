@@ -1,16 +1,11 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-    const meeting = sequelize.define('meeting', {
+    return sequelize.define('meeting', {
         id: {
             autoIncrement: true,
             type: DataTypes.INTEGER,
             allowNull: false,
-            primaryKey: true,
-            unique: "meeting_id_book_id_address_meeting_id_user_id_eaf83195_uniq"
-        },
-        type: {
-            type: DataTypes.SMALLINT,
-            allowNull: false
+            primaryKey: true
         },
         objective: {
             type: DataTypes.STRING(100),
@@ -32,23 +27,9 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.DATE(6),
             allowNull: false
         },
-        address_meeting_id: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            references: {
-                model: 'address_meeting',
-                key: 'id'
-            },
-            unique: "meeting_address_meeting_id_09b8c2da_fk_address_meeting_id"
-        },
-        book_id: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            references: {
-                model: 'book',
-                key: 'id'
-            },
-            unique: "meeting_id_book_id_address_meeting_id_user_id_eaf83195_uniq"
+        book: {
+            type: DataTypes.STRING(255),
+            allowNull: false
         },
         user_id: {
             type: DataTypes.INTEGER,
@@ -56,8 +37,7 @@ module.exports = function(sequelize, DataTypes) {
             references: {
                 model: 'user',
                 key: 'id'
-            },
-            unique: "meeting_id_book_id_address_meeting_id_user_id_eaf83195_uniq"
+            }
         }
     }, {
         sequelize,
@@ -72,29 +52,13 @@ module.exports = function(sequelize, DataTypes) {
                 ]
             },
             {
-                name: "address_meeting_id",
-                unique: true,
-                using: "BTREE",
-                fields: [
-                    { name: "address_meeting_id" },
-                ]
-            },
-            {
-                name: "meeting_id_book_id_address_meeting_id_user_id_eaf83195_uniq",
+                name: "meeting_id_datetime_start_user_id_f3a056d1_uniq",
                 unique: true,
                 using: "BTREE",
                 fields: [
                     { name: "id" },
-                    { name: "book_id" },
-                    { name: "address_meeting_id" },
+                    { name: "datetime_start" },
                     { name: "user_id" },
-                ]
-            },
-            {
-                name: "meeting_book_id_4968ad1d_fk_book_id",
-                using: "BTREE",
-                fields: [
-                    { name: "book_id" },
                 ]
             },
             {
@@ -106,11 +70,4 @@ module.exports = function(sequelize, DataTypes) {
             },
         ]
     });
-    // meeting.associate = models => {
-    //     meeting.belongsTo(models.Book, { as: 'book', foreignKey: 'book_id' });
-    //     meeting.belongsTo(models.User, { as: 'user', foreignKey: 'user_id' });
-    //     meeting.hasOne(models.Address_meeting, { as: 'address', foreignKey: 'address_meeting_id' });
-    // }
-
-    return meeting;
 };

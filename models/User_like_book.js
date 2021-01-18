@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-    const user_has_swap = sequelize.define('user_has_swap', {
+    return sequelize.define('user_like_book', {
         id: {
             autoIncrement: true,
             type: DataTypes.INTEGER,
@@ -15,14 +15,6 @@ module.exports = function(sequelize, DataTypes) {
                 key: 'id'
             }
         },
-        swap_id: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            references: {
-                model: 'swap',
-                key: 'id'
-            }
-        },
         user_id: {
             type: DataTypes.INTEGER,
             allowNull: false,
@@ -33,7 +25,7 @@ module.exports = function(sequelize, DataTypes) {
         }
     }, {
         sequelize,
-        tableName: 'user_has_swap',
+        tableName: 'user_like_book',
         timestamps: true,
         indexes: [{
                 name: "PRIMARY",
@@ -44,30 +36,21 @@ module.exports = function(sequelize, DataTypes) {
                 ]
             },
             {
-                name: "user_has_swap_user_id_swap_id_book_id_a13db444_uniq",
+                name: "user_like_book_user_id_book_id_ca484f5a_uniq",
                 unique: true,
                 using: "BTREE",
                 fields: [
                     { name: "user_id" },
-                    { name: "swap_id" },
                     { name: "book_id" },
                 ]
             },
             {
-                name: "user_has_swap_book_id_d4f4d0b9_fk_book_id",
+                name: "user_like_book_book_id_b7144d4b_fk_book_id",
                 using: "BTREE",
                 fields: [
                     { name: "book_id" },
-                ]
-            },
-            {
-                name: "user_has_swap_swap_id_bd8f2667_fk_swap_id",
-                using: "BTREE",
-                fields: [
-                    { name: "swap_id" },
                 ]
             },
         ]
     });
-    return user_has_swap;
 };
