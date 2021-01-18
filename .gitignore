@@ -1,10 +1,5 @@
 node_modules
-roadmap.todo
-.env*
-*.sql
-public/*
-views/*
-testes/*
 nbproject
-.vscode
-config
+.env
+.png
+public
