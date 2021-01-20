@@ -193,8 +193,35 @@ const MeetingController = {
                     });
                 }
 
+                let date_now = moment();
+                date_now.date(date_now.date() - 1);
+                if (req.body.location && meeting.datetime_start < date_now.toDate()) {
+                    return res.status(400).json({
+                        "title": "Atualização falhou:(",
+                        "errors": ["Só é possivel adicionar a url do encontro no dia anterior ao encontro!"]
+                    });
+                }
+
                 const updated_meeting = await meeting.update(req.body)
 
+                if (req.body.location && updated_meeting.location) {
+                    let emails = [];
+                    const inscriptions = await updated_meeting.getUser_has_meetings()
+                    for (const inscription of inscriptions) {
+                        let user = await inscription.getUser()
+                        emails.push(user.email)
+                    }
+
+                    const mailOptions = {
+                        from: 'olamundo132@gmail.com',
+                        to: emails,
+                        subject: 'Link para participação de encontro disponibilizado!',
+                        html: '<h1>Link disponivel!</h1>' +
+                            '<p>O criador do evendo acabou de disponibilizar o link para o encontro, acesse na hora do evento!</p>' +
+                            '<a href=' + updated_meeting.location + '>Entrar no encontro</a>'
+                    };
+                    transporter.sendMail(mailOptions);
+                };
                 res.status(201).json({
                     "title": "Meeting atualizado com sucesso!",
                     "object": meeting
