@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const config = require('../../config/config');
 const valid_password = require('../../validators/PasswordValidation');
+const transporter = require('../../config/transport');
 const { sequelize } = require('../../models')
 
 const AuthController = {
@@ -67,6 +68,17 @@ const AuthController = {
                 // body_user.verified = false;
 
                 const user = await User.create(body_user);
+                const token = jwt.sign({ email: user.email }, config.secretEmailConfirm);
+                const url_confirmation = 'http://localhost:3000/authentication/email/confirm?token=' + token
+                const mailOptions = {
+                    from: 'olamundo132@gmail.com',
+                    to: user.email,
+                    subject: 'Confirme seu email!',
+                    html: '<h1>Confirme seu email!</h1>' +
+                        '<p>Clique no botão abaixo e confirme seu email para poder logar com sua conta!</p>' +
+                        '<a type="botton" href=' + url_confirmation + '>Confirmar email</a>'
+                };
+                transporter.sendMail(mailOptions);
                 res.status(201).json({
                     "title": "Confirme seu email!",
                     "message": "Confirme seu email para poder logar com sua conta!",
@@ -89,6 +101,41 @@ const AuthController = {
         };
     },
 
+    confirm_email: async(req, res) => {
+        if (!req.query.token)
+            return res.status(400).json({
+                "title": "Confirmação falhou:(",
+                "errors": ["Token não enviado!"]
+            });
+        try {
+            let body = jwt.verify(req.query.token, config.secretEmailConfirm);
+            if (!body.email || body.id)
+                return res.status(400).json({
+                    "title": "Confirmação falhou:(",
+                    "errors": ["Token expirado ou invalido!"]
+                });
+
+            const user = await User.update({ verified: 1 }, {
+                where: { email: body.email, active: true, verified: false }
+            });
+            if (!user[0])
+                return res.status(400).json({
+                    "title": "Confirmação falhou:(",
+                    "errors": ["Token inexistente ou invalido!"]
+                });
+
+            res.status(200).json({
+                "title": "Email confirmado com sucesso!",
+                "object": null
+            });
+        } catch (errors) {
+            console.log(errors)
+            res.status(400).json({
+                "title": "Confirmação falhou:(",
+                "errors": ["Token inexistente ou invalido!"]
+            });
+        }
+    }
 }
 
 module.exports = AuthController;
