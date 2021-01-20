@@ -3,6 +3,81 @@ const { Sequelize, Op, where } = require('sequelize')
 const transporter = require("../../config/transport")
 const moment = require('moment');
 const MeetingController = {
+    inscription: async(req, res) => {
+        let limit = req.pagination.limit;
+        let page = req.pagination.page;
+        try {
+            const inscriptions = await Meeting.findAll({
+                include: [{
+                    model: User_has_meeting,
+                    where: {
+                        user_id: req.user.id
+                    },
+                    attributes: []
+                }],
+                where: req.query,
+                offset: 0 + (req.pagination.page - 1) * req.pagination.limit,
+                limit: req.pagination.limit,
+            })
+
+            res.status(200).json({
+                "items": inscriptions,
+                "page": page,
+                "limit": limit
+            });
+        } catch (errors) {
+            console.log(errors)
+            res.status(500).json({
+                "title": "Algo aconteceu:(",
+                "errors": ['Algo inexperado aconteceu!'],
+            });
+        };
+    },
+
+    uninscription: async(req, res) => {
+        try {
+            const book = await User_has_meeting.destroy({
+                include: [{
+                    model: Meeting,
+                    where: {
+                        datetime_start: {
+                            [Op.gt]: moment().toDate()
+                        },
+                    }
+                }],
+                where: {
+                    user_id: req.user.id,
+                    id: req.params.id,
+                }
+            })
+
+            if (!book) {
+                return res.status(404).json({
+                    "title": "Você não esta inscrito no evento!",
+                    "errors": ["Você não esta inscrito no evento!"]
+                });
+            }
+
+            res.status(200).json({
+                "title": "Você se desinscreveu desse evento!",
+                "object": null
+            });
+
+        } catch (errors) {
+            if (errors.name == 'SequelizeValidationError') {
+                res.status(400).json({
+                    "title": "Deleção falhou:(",
+                    "errors": errors.errors.map(error => error.message)
+                });
+            } else {
+                res.status(500).json({
+                    "title": "Algo aconteceu:(",
+                    "errors": ['Algo inexperado aconteceu!'],
+                });
+            }
+        };
+    },
+
     index: async(req, res) => {
         let limit = req.pagination.limit;
         let page = req.pagination.page;
