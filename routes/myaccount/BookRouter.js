@@ -1,18 +1,60 @@
 var express = require('express');
 var router = express.Router();
+var multer = require("multer")
+var path = require("path")
 
-const bookSchema = require("../../validations/BookSchema")
-
-const validaBody = require("../../middlewares/ValidaBody");
-const BookController = require("../../constrollers/BookController");
+const BookController = require("../../controllers/myaccountControllers/BookController");
 const ChapterRouter = require("./ChapterRouter");
 
-router.get('/', BookController.my_index);
-router.post('/', validaBody(bookSchema), BookController.store);
-router.get('/:id', BookController.my_detail);
-router.patch('/:id', BookController.update);
-router.delete('/:id', BookController.destroy);
+var storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'public/img/books')
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
+    }
+})
 
-router.use('/:id/chapter', ChapterRouter);
+var upload = multer({
+    storage: storage,
+    limits: {
+        files: 1,
+        fileSize: 4 * 1024 * 1024
+    },
+    fileFilter: (req, file, cb) => {
+        let ext = path.extname(file.originalname);
+        if (ext !== '.png' && ext !== '.jpg' && ext !== '.jpeg') {
+            return cb(new Error('Only images are allowed'))
+        }
+        cb(null, true)
+    },
+});
+
+router.route('/')
+    .get(BookController.index)
+    .post(upload.any(), (req, res, next) => {
+        if (req.files) {
+            re = /public/;
+            req.body.image = req.files[0].path.replace(re, '');
+        }
+        next();
+    }, BookController.store);
+
+router.get('/likeds', BookController.liked);
+router.delete('/likeds/:id', BookController.unliked);
+
+router.route('/:id')
+    .get(BookController.detail)
+    .put(upload.any(), (req, res, next) => {
+        if (req.files) {
+            re = /public/;
+            req.body.image = req.files[0].path.replace(re, '');
+        }
+        next();
+    }, BookController.update)
+    .delete(BookController.destroy);
+
+
+router.use('/', ChapterRouter);
 
 module.exports = router;
