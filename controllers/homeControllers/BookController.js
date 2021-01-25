@@ -12,8 +12,8 @@ const BookController = {
             })
             if (!book) {
                 return res.status(404).json({
-                    "title": "Encontro não encontrado!",
-                    "errors": ["Não foi possivel encontrar seu Encontro!"]
+                    "title": "Livro não encontrado!",
+                    "errors": ["Não foi possivel encontrar seu Livro!"]
                 })
             }
 
@@ -87,6 +87,7 @@ const BookController = {
             });
         };
     },
+
     detail: async(req, res) => {
         try {
             const book = await Book.findOne({
