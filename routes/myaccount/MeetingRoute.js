@@ -1,12 +1,19 @@
 var express = require('express');
 var router = express.Router();
 
-const MeetingController = require("../../constrollers/MeetingController");
+const MeetingController = require("../../controllers/myaccountControllers/MeetingController");
 
-router.get('/inscriptions', MeetingController.my_inscription);
-router.get('/', MeetingController.my_index);
-router.post('/', MeetingController.store);
-router.get('/:id', MeetingController.my_detail);
-// router.patch('myaccount/meetings/:id', MeetingController.update);
-router.delete('/:id', MeetingController.destroy);
+router.get('/inscriptions', MeetingController.inscription);
+router.delete('/inscriptions/:id', MeetingController.uninscription);
+
+router.route('/')
+    .get(MeetingController.index)
+    .post(MeetingController.store);
+
+router.route('/:id')
+    .get(MeetingController.detail)
+    .put(MeetingController.update)
+    .delete(MeetingController.destroy);
+
+
 module.exports = router;

@@ -1,13 +1,13 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-    const book = sequelize.define('book', {
+    return sequelize.define('book', {
         id: {
             autoIncrement: true,
             type: DataTypes.INTEGER,
             allowNull: false,
             primaryKey: true
         },
-        name: {
+        title: {
             type: DataTypes.STRING(100),
             allowNull: false
         },
@@ -20,10 +20,6 @@ module.exports = function(sequelize, DataTypes) {
             allowNull: false
         },
         status: {
-            type: DataTypes.SMALLINT,
-            allowNull: false
-        },
-        type: {
             type: DataTypes.SMALLINT,
             allowNull: false
         },
@@ -65,8 +61,4 @@ module.exports = function(sequelize, DataTypes) {
             },
         ]
     });
-    book.associate = models => {
-        book.belongsTo(models.User, { as: 'user', foreignKey: 'user_id' });
-    }
-    return book;
 };

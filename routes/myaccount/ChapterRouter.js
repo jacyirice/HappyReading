@@ -1,9 +1,9 @@
 var express = require('express');
 var router = express.Router();
 
-const ChapterConstroller = require("../../constrollers/ChapterConstroller");
+const ChapterController = require("../../controllers/myaccountControllers/ChapterController");
 
-router.get('/:id/chapter/:id_chapter', ChapterConstroller.my_chapter);
-router.post('/:id/chapter', ChapterConstroller.store_chapter);
+router.post('/:id_book/chapters/', ChapterController.store)
+router.get('/:id_book/chapters/:id/', ChapterController.detail);
 
 module.exports = router;

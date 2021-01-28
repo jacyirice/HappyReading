@@ -4,12 +4,11 @@ var multer = require("multer")
 var path = require("path")
 
 const SetfieldImage = require('../../middlewares/SetfieldImage')
-const BookController = require("../../controllers/myaccountControllers/BookController");
-const ChapterRouter = require("./ChapterRouter");
+const UserController = require("../../controllers/myaccountControllers/UserController");
 
 var storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'public/img/books')
+        cb(null, 'public/img/users')
     },
     filename: (req, file, cb) => {
         cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
@@ -31,18 +30,10 @@ var upload = multer({
     },
 });
 
+router.put('/password', UserController.update_password)
 router.route('/')
-    .get(BookController.index)
-    .post(upload.any(), SetfieldImage, BookController.store);
+    .get(UserController.detail)
+    .put(upload.any(), SetfieldImage, UserController.update);
 
-router.get('/likeds', BookController.liked);
-router.delete('/likeds/:id', BookController.unliked);
-
-router.route('/:id')
-    .get(BookController.detail)
-    .put(upload.any(), SetfieldImage, BookController.update)
-    .delete(BookController.destroy);
-
-router.use('/', ChapterRouter);
 
 module.exports = router;

@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-    const user = sequelize.define('user', {
+    return sequelize.define('user', {
         id: {
             autoIncrement: true,
             type: DataTypes.INTEGER,
@@ -27,7 +27,7 @@ module.exports = function(sequelize, DataTypes) {
             unique: "telephone"
         },
         password: {
-            type: DataTypes.STRING(16),
+            type: DataTypes.STRING(100),
             allowNull: false
         },
         image: {
@@ -41,7 +41,17 @@ module.exports = function(sequelize, DataTypes) {
                 model: 'address',
                 key: 'id'
             },
-            unique: "user_address_id_d8fffd8c_fk_address_id"
+            unique: "user_address_id_d8fffd8c_fk"
+        },
+        active: {
+            type: DataTypes.TINYINT,
+            allowNull: false,
+            defaultValue: 1
+        },
+        verified: {
+            type: DataTypes.TINYINT,
+            allowNull: false,
+            defaultValue: 0
         }
     }, {
         sequelize,
@@ -90,8 +100,4 @@ module.exports = function(sequelize, DataTypes) {
             },
         ]
     });
-    user.associate = models => {
-        user.hasOne(models.Address, { as: 'address', foreignKey: 'address_id' });
-    }
-    return user;
 };

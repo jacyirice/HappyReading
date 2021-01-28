@@ -6,7 +6,7 @@ module.exports = (req, res, next) => {
     let authorization = req.header("authorization");
 
     if (!authorization) {
-        res.status(400).json({ error: "Requisição inválida" });
+        res.status(401).json({ error: "Requisição inválida" });
         return;
     }
 
