@@ -41,10 +41,9 @@ const BookController = {
             const book = await User_like_book.destroy({
                 where: {
                     user_id: req.user.id,
-                    id: req.params.id,
+                    book_id: req.params.id,
                 }
             })
-
 
             if (!book) {
                 return res.status(404).json({
@@ -65,6 +64,7 @@ const BookController = {
                     "errors": errors.errors.map(error => error.message)
                 });
             } else {
+                console.log(errors)
                 res.status(500).json({
                     "title": "Algo aconteceu:(",
                     "errors": ['Algo inexperado aconteceu!'],
@@ -165,7 +165,7 @@ const BookController = {
                 })
 
             if (!book) {
-                res.status(404).json({
+                return res.status(404).json({
                     "title": "Livro não encontrado!",
                     "errors": ["Não foi possivel encontrar seu livro!"]
                 });
@@ -173,7 +173,7 @@ const BookController = {
 
             res.status(201).json({
                 "title": "Livro atualizado com sucesso!",
-                "object": book
+                "object": null
             });
         } catch (errors) {
             if (errors.name == 'SequelizeValidationError') {

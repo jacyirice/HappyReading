@@ -1,8 +1,9 @@
+const { Op } = require('sequelize');
 const SearchField = (query, field) => {
     let q = query.q;
     if (q) {
         query[field] = {
-            [Op.ilike]: '%' + q + '%'
+            [Op.like]: '%' + q + '%'
         };
         delete query.q;
     }

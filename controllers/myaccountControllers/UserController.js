@@ -50,7 +50,7 @@ module.exports = {
             const user = await User.findOne({ where: { id: req.user.id, active: true } })
 
             if (!user) {
-                res.status(404).json({
+                return res.status(404).json({
                     "title": "Usuario não encontrado!",
                     "errors": ["Não foi possivel encontrar seu usuario!"]
                 });
@@ -60,11 +60,11 @@ module.exports = {
 
             if (!req.body.password)
                 errors.push("Digite a senha atual corretamente!")
-            else if (await bcrypt.compare(req.body.password, user.password))
+            else if (!await bcrypt.compare(req.body.password, user.password))
                 errors.push("Digite a senha atual corretamente!")
             else if (await bcrypt.compare(req.body.new_password, user.password))
                 errors.push("A nova senha deve ser diferente da atual!")
-            if (errors)
+            if (errors.length)
                 return res.status(400).json({
                     "title": "Atualização falhou:(",
                     "errors": errors

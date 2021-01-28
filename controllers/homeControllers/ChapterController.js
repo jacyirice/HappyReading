@@ -17,8 +17,8 @@ const ChapterController = {
 
             if (!chapter) {
                 return res.status(404).json({
-                    "title": "Livro não encontrado!",
-                    "errors": ["Não foi possivel encontrar seu livro!"]
+                    "title": "Capitulo não encontrado!",
+                    "errors": ["Não foi possivel encontrar seu Capitulo!"]
                 });
             };
 

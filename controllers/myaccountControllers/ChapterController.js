@@ -64,11 +64,21 @@ const ChapterController = {
         try {
             const chapter = await Chapter.update(
                 req.body, {
-                    where: { id: req.params.id, book_id: req.params.id_book, user_id: req.user.id }
+                    include: [{
+                        model: Book,
+                        where: {
+                            book_id: req.params.id_book,
+                            user_id: req.user.id
+                        },
+                        attributes: []
+                    }],
+                    where: {
+                        id: req.params.id,
+                    }
                 })
 
             if (!chapter) {
-                res.status(404).json({
+                return res.status(404).json({
                     "title": "Capitulo não encontrado!",
                     "errors": ["Não foi possivel encontrar seu Capitulo!"]
                 });
@@ -85,6 +95,7 @@ const ChapterController = {
                     "errors": errors.errors.map(error => error.message)
                 });
             } else {
+                console.log(errors)
                 res.status(500).json({
                     "title": "Algo aconteceu:(",
                     "errors": ['Algo inexperado aconteceu!'],
@@ -96,8 +107,15 @@ const ChapterController = {
     destroy: async(req, res) => {
         try {
             const chapter = await Chapter.destroy({
+                include: [{
+                    model: Book,
+                    where: {
+                        book_id: req.params.id_book,
+                        user_id: req.user.id
+                    },
+                    attributes: []
+                }],
                 where: {
-                    user_id: req.user.id,
                     id: req.params.id,
                 }
             });
