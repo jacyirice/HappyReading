@@ -4,7 +4,7 @@ var UserRouter = require('./UserRouter');
 var express = require('express');
 var router = express.Router();
 
-const SetUserIdQuery = require("../middlewares/SetUserIdQuery");
+const SetUserIdQuery = require("../../middlewares/SetUserIdQuery");
 
 router.use('/meetings', MeetingRouter);
 router.use('/books', SetUserIdQuery, BookRouter);
