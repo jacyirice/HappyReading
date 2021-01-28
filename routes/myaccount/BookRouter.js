@@ -3,6 +3,7 @@ var router = express.Router();
 var multer = require("multer")
 var path = require("path")
 
+const SetfieldImage = require('../../middlewares/SetfieldImage')
 const BookController = require("../../controllers/myaccountControllers/BookController");
 const ChapterRouter = require("./ChapterRouter");
 
@@ -32,28 +33,15 @@ var upload = multer({
 
 router.route('/')
     .get(BookController.index)
-    .post(upload.any(), (req, res, next) => {
-        if (req.files) {
-            re = /public/;
-            req.body.image = req.files[0].path.replace(re, '');
-        }
-        next();
-    }, BookController.store);
+    .post(upload.any(), SetfieldImage, BookController.store);
 
 router.get('/likeds', BookController.liked);
 router.delete('/likeds/:id', BookController.unliked);
 
 router.route('/:id')
     .get(BookController.detail)
-    .put(upload.any(), (req, res, next) => {
-        if (req.files) {
-            re = /public/;
-            req.body.image = req.files[0].path.replace(re, '');
-        }
-        next();
-    }, BookController.update)
+    .put(upload.any(), SetfieldImage, BookController.update)
     .delete(BookController.destroy);
-
 
 router.use('/', ChapterRouter);
 

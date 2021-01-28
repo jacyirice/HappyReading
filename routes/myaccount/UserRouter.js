@@ -3,6 +3,7 @@ var router = express.Router();
 var multer = require("multer")
 var path = require("path")
 
+const SetfieldImage = require('../../middlewares/SetfieldImage')
 const UserController = require("../../controllers/myaccountControllers/UserController");
 
 var storage = multer.diskStorage({
@@ -32,13 +33,7 @@ var upload = multer({
 router.put('/password', UserController.update_password)
 router.route('/')
     .get(UserController.detail)
-    .put(upload.any(), (req, res, next) => {
-        if (req.files) {
-            re = /public/;
-            req.body.image = req.files[0].path.replace(re, '');
-        }
-        next();
-    }, UserController.update);
+    .put(upload.any(), SetfieldImage, UserController.update);
 
 
 module.exports = router;

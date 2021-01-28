@@ -2,7 +2,7 @@ const { User, Address } = require('../../models');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const config = require('../../config/config');
-const valid_password = require('../../validators/PasswordValidation');
+const valid_password = require('../../utils/validators/PasswordValidation');
 const transporter = require('../../config/transport');
 const { sequelize } = require('../../models')
 

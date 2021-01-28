@@ -119,8 +119,8 @@ const MeetingController = {
 
             if (!meeting) {
                 res.status(404).json({
-                    "title": "Livro não encontrado!",
-                    "errors": ["Não foi possivel encontrar seu livro!"]
+                    "title": "Encontro não encontrado!",
+                    "errors": ["Não foi possivel encontrar seu Encontro!"]
                 });
             };
 

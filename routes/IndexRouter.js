@@ -7,7 +7,6 @@ const AuthenticationRouter = require('./authentication/AuthRouter');
 
 const VerificaSeTemToken = require('../middlewares/VerificaSeTemToken');
 const ValidaToken = require('../middlewares/ValidaToken');
-
 const Pagination = require("../middlewares/Pagination");
 
 router.use('/authentication', AuthenticationRouter);

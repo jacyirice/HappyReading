@@ -1,5 +1,6 @@
 const { User, Book, Chapter, User_like_book } = require('../../models');
 const { Sequelize, Op } = require('sequelize');
+const searchField = require('../../utils/QueryEdit/SearchField')
 const BookController = {
 
     like: async(req, res) => {
@@ -54,14 +55,7 @@ const BookController = {
     index: async(req, res) => {
         let limit = req.pagination.limit;
         let page = req.pagination.page;
-        let q = req.query.q;
-        if (q) {
-            req.query.title = {
-                [Op.like]: '%' + q + '%'
-            };
-            delete req.query.q;
-            console.log(req.query)
-        }
+        searchField(req.query, 'title');
 
         try {
             const books = await Book.findAll({

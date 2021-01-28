@@ -1,5 +1,6 @@
 const { Book, Chapter, User_like_book } = require('../../models');
 const { Sequelize, ValidationError } = require('sequelize')
+const searchField = require('../../utils/QueryEdit/SearchField')
 const BookController = {
 
     liked: async(req, res) => {
@@ -75,7 +76,7 @@ const BookController = {
     index: async(req, res) => {
         let limit = req.pagination.limit;
         let page = req.pagination.page;
-        req.query.user_id = req.user.id;
+        searchField(req.query, 'title');
         try {
             const books = await Book.findAll({
                 where: req.query,

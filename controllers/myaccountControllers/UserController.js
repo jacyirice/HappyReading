@@ -1,5 +1,5 @@
 const { User } = require('../../models');
-const valid_password = require('../../validators/PasswordValidation');
+const valid_password = require('../../utils/validators/PasswordValidation');
 const bcrypt = require('bcrypt');
 
 module.exports = {
@@ -92,4 +92,5 @@ module.exports = {
             }
         };
     },
+
 }
