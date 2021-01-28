@@ -2,4 +2,6 @@ node_modules
 nbproject
 .env
 .png
+.jpeg
+.jpg
 public
